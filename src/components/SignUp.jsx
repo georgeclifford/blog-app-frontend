@@ -19,7 +19,7 @@ const SignUp = () => {
 		console.log(input);
 		axios.post("http://localhost:3001/api/blog/register", input).then((response) => {
 			console.log(response.data);
-			if (response.data.status == "success") {
+			if (response.data.status === "success") {
 				alert("User Registration Successfull!");
 				setInput({
 					name: "",

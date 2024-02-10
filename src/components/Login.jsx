@@ -1,30 +1,55 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-	const [input, setInput] = new useState({
-		email: "",
-		password: "",
-	});
+	const [input, setInput] = useState([
+		{
+			email: "",
+			password: "",
+		},
+	]);
 	const inputHandler = (event) => {
 		setInput({ ...input, [event.target.name]: event.target.value });
 	};
+	const navigate = useNavigate();
 	const readvalues = () => {
 		console.log(input);
 		axios.post("http://localhost:3001/api/blog/login", input).then((response) => {
 			console.log(response.data);
-			if (response.data.status == "success") {
+			if (response.data.status === "success") {
 				alert("Login Successfull!");
-				setInput({
-					email: "",
-					password: "",
-				});
+				console.log(response.data.userData._id);
+				sessionStorage.setItem("userId", response.data.userData._id);
+				navigate("/add");
 			} else {
-				alert("Login Unsuccessfull!");
+				alert("Invalid Username Or Password!");
 			}
 		});
 	};
+
+	// const [input, setInput] = new useState({
+	// 	email: "",
+	// 	password: "",
+	// });
+	// const inputHandler = (event) => {
+	// 	setInput({ ...input, [event.target.name]: event.target.value });
+	// };
+	// const readvalues = () => {
+	// 	console.log(input);
+	// 	axios.post("http://localhost:3001/api/blog/login", input).then((response) => {
+	// 		console.log(response.data);
+	// 		if (response.data.status === "success") {
+	// 			alert("Login Successfull!");
+	// 			setInput({
+	// 				email: "",
+	// 				password: "",
+	// 			});
+	// 		} else {
+	// 			alert("Login Unsuccessfull!");
+	// 		}
+	// 	});
+	// };
 
 	return (
 		<div>
@@ -37,14 +62,13 @@ const Login = () => {
 					<div className="card col col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
 						<form className="row g-4 card-body">
 							<div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-								<label htmlFor="inputEmail4" className="form-label">
+								<label htmlFor="inputEmail" className="form-label">
 									Email
 								</label>
 								<input
 									type="email"
 									className="form-control"
-									id="inputEmail4"
-									placeholder="example@email.com"
+									id="inputEmail"
 									name="email"
 									value={input.email}
 									onChange={inputHandler}
@@ -53,14 +77,13 @@ const Login = () => {
 							</div>
 
 							<div className="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-								<label htmlFor="inputPassword4" className="form-label">
+								<label htmlFor="inputPassword" className="form-label">
 									Password
 								</label>
 								<input
 									type="password"
 									className="form-control"
-									id="inputPassword4"
-									placeholder="********"
+									id="inputPassword"
 									name="password"
 									value={input.password}
 									onChange={inputHandler}
